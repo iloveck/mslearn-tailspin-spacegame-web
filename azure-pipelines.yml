@@ -4,7 +4,11 @@ trigger:
 pool:
   vmImage: 'ubuntu-16.04'
   demands:
+<<<<<<< HEAD
     - npm
+=======
+  - npm
+>>>>>>> b4dca22ce91e99d0b864e183dd198ede2e49c0c7
 
 variables:
   buildConfiguration: 'Release'
@@ -12,9 +16,16 @@ variables:
   dotnetSdkVersion: '2.1.505'
 
 steps:
+<<<<<<< HEAD
 - task: DotNetCoreInstaller@0
   displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
   inputs:
+=======
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
+  inputs:
+    packageType: sdk
+>>>>>>> b4dca22ce91e99d0b864e183dd198ede2e49c0c7
     version: '$(dotnetSdkVersion)'
 
 - task: Npm@1
@@ -22,7 +33,11 @@ steps:
   inputs:
     verbose: false
 
+<<<<<<< HEAD
 - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
+=======
+- script: './node_modules/.bin/node-sass Tailspin$(9wwwrootDir).SpaceGame.Web/wwwroot --output $(wwwrootDir)'
+>>>>>>> b4dca22ce91e99d0b864e183dd198ede2e49c0c7
   displayName: 'Compile Sass assets'
 
 - task: gulp@1
@@ -30,7 +45,11 @@ steps:
 
 - script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
   displayName: 'Write build info'
+<<<<<<< HEAD
   workingDirectory: $(wwwrootDir)
+=======
+  workingDirectory: Tailspin.SpaceGame.Web/wwwroot
+>>>>>>> b4dca22ce91e99d0b864e183dd198ede2e49c0c7
 
 - task: DotNetCoreCLI@2
   displayName: 'Restore project dependencies'
@@ -39,6 +58,7 @@ steps:
     projects: '**/*.csproj'
 
 - task: DotNetCoreCLI@2
+<<<<<<< HEAD
   displayName: 'Build the project - $(buildConfiguration)'
   inputs:
     command: 'build'
@@ -53,6 +73,27 @@ steps:
     publishWebProjects: false
     arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
     zipAfterPublish: true
+=======
+  displayName: 'Build the project - Release'
+  inputs:
+    command: 'build'
+    arguments: '--no-restore --configuration Release'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish the project - Release'
+  inputs:
+    command: 'publish'
+    projects: '**/*.csproj'
+
+- template: templates/build.yml
+  parameters:
+    buildConfiguration: 'Debug'
+
+- template: templates/build.yml
+  parameters:
+    buildConfiguration: 'Release'
+>>>>>>> b4dca22ce91e99d0b864e183dd198ede2e49c0c7
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
