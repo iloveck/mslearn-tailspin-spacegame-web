@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-16.04'
   demands:
 <<<<<<< HEAD
-    - npm
+  - npm
 =======
   - npm
 >>>>>>> b4dca22ce91e99d0b864e183dd198ede2e49c0c7
