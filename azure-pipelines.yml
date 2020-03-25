@@ -8,38 +8,52 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
+  dotnetSdkVersion: '3.1.100'
 
 steps:
 - task: UseDotNet@2
-  displayName: 'CK Use .NET Core SDK 3.1.100'
+  displayName: 'CKCK0325 Use .NET Core SDK 3.1.100'
   inputs:
     packageType: sdk
-    version: 3.1.100
+    version: $(dotnetSdkVersion)
 
 - task: Npm@1
-  displayName: 'Run npm install'
+  displayName: 'CK0325 un npm install'
   inputs:
     verbose: false
 
-- script: './node_modules/.bin/node-sass Tailspin.SpaceGame.Web/wwwroot --output Tailspin.SpaceGame.Web/wwwroot'
-  displayName: 'Compile Sass assets'
+- script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
+  displayName: 'CK0325 Compile Sass assets'
 
 - task: gulp@1
   displayName: 'Run gulp tasks'
 
 - script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
-  displayName: 'Write build info'
-  workingDirectory: Tailspin.SpaceGame.Web/wwwroot
+  displayName: 'CK0325CK Write build info'
+  workingDirectory: $(wwwrootDir)
 
 - task: DotNetCoreCLI@2
-  displayName: 'Restore project dependencies'
+  displayName: 'CK0325 Restore project dependencies'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build the project - Release'
+  displayName: 'CK0325 Build the project - Release'
   inputs:
     command: 'build'
     arguments: '--no-restore --configuration Release'
     projects: '**/*.csproj'
+
+- template: template/build.yml
+  parameters:
+    buildConfiguration: 'Debug'    
+
+- template: template/build.yml
+  parameters:
+    buildConfiguration: 'Release'  
+    
+- task: PublishBuildArtifacts@1
+  displayName:  'CK0325 Publish Artifacts:  drop'
+  condition:  succeeded()
